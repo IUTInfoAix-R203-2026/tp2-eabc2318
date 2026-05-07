@@ -35,18 +35,47 @@ public class ConvertisseurDeNombreRomain {
    *     interdite
    */
   public int enNombreArabe(String chiffreRomain) {
+    if (chiffreRomain == null || chiffreRomain.isEmpty()) {
+      throw new IllegalArgumentException("Chiffre romain vide ou nul");
+    }
+
     int total = 0;
-    // TODO exercice 3 : remplir total en parcourant la chaîne.
-    //
-    // Activez les tests un par un. Commencez par "I" = 1 (fake it en
-    // retournant 1 en dur), puis "II" = 2 et "III" = 3 (boucle de comptage
-    // d'occurrences de I), puis "V" = 5 (switch sur le symbole).
-    //
-    // Quand vous arrivez à "IV" = 4 : extrayez une méthode valeurDe(char)
-    // pour factoriser, puis ajoutez la logique de soustraction.
-    //
-    // Pour les exceptions : une soustraction est valide seulement pour
-    // I avant V/X, X avant L/C, C avant D/M. Tout le reste est invalide.
+    int precedent = 0;
+    for (int i = chiffreRomain.length() - 1; i >= 0; i--) {
+      char symbole = chiffreRomain.charAt(i);
+      int valeur = valeurDe(symbole);
+      if (valeur < precedent) {
+        if (!soustractionValide(valeur, precedent)) {
+          throw new IllegalArgumentException("Soustraction invalide : " + chiffreRomain);
+        }
+        total -= valeur;
+      } else {
+        total += valeur;
+        precedent = valeur;
+      }
+    }
     return total;
+  }
+
+  private int valeurDe(char symbole) {
+    return switch (symbole) {
+      case 'I' -> 1;
+      case 'V' -> 5;
+      case 'X' -> 10;
+      case 'L' -> 50;
+      case 'C' -> 100;
+      case 'D' -> 500;
+      case 'M' -> 1000;
+      default -> throw new IllegalArgumentException("Symbole romain inconnu : " + symbole);
+    };
+  }
+
+  private boolean soustractionValide(int valeurCourante, int valeurSuivante) {
+    return switch (valeurCourante) {
+      case 1 -> valeurSuivante == 5 || valeurSuivante == 10;
+      case 10 -> valeurSuivante == 50 || valeurSuivante == 100;
+      case 100 -> valeurSuivante == 500 || valeurSuivante == 1000;
+      default -> false;
+    };
   }
 }
