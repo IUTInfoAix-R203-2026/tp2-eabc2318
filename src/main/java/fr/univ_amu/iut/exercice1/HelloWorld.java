@@ -29,7 +29,7 @@ public class HelloWorld {
     // Activez les tests un par un. Fake it d'abord, triangulez quand un
     // deuxième test vous y force.
     if (nom == null || nom.isEmpty()) {
-      return "Hello, Alice!";
+      return "Hello, World!";
     }
     return "Hello, " + nom + "!";
   }
